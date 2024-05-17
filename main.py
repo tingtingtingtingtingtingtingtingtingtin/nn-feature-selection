@@ -49,3 +49,10 @@ def expandForward(n):
         if f not in n.features:
            expanded.append(n.cloneAfterAdding(f))
     return expanded
+
+def expandBackward(n):
+    expanded = []
+    for f in allFeatures:
+        if f in n.features:
+            expanded.append(n.cloneAfterRemoving(f))
+    return expanded
