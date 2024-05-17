@@ -48,47 +48,39 @@ def expandBackward(n):
     # return expanded
 
 def forward_search():
-    startNode = Node()
-    startNode.score = evaluationFunction(startNode)
-    q = queue.Queue()
-    q.put(startNode)
-    best = startNode
+    node = Node()
+    node.score = evaluationFunction(node)
+    best = node
     print("Beginning Search...")
-    while q.not_empty:
-        node = q.get()
+    while node.features != allFeatures:
         if node.score < best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
-        if node.features == allFeatures: return best
-        print(f"Best: {node}\n")
+        print(f"\nBest: {node}\n")
         neighbors = expandForward(node)
         for n in neighbors:
             n.score = evaluationFunction(n)
-            print(n)
-        q.put(max(neighbors, key=lambda n: n.score))
-    return False
+            print(f"    {n}")
+        node = max(neighbors, key=lambda n: n.score)
+    return best
 
 def backward_search():
-    startNode = Node(allFeatures)
-    startNode.score = evaluationFunction(startNode)
-    q = queue.Queue()
-    q.put(startNode)
-    best = startNode
+    node = Node(allFeatures)
+    node.score = evaluationFunction(node)
+    best = node
     print("Beginning Search...")
-    while q.not_empty:
-        node = q.get()
+    while len(node.features):
         if node.score < best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
-        if not len(node.features): return best
-        print(f"Best: {node}\n")
+        print(f"\nBest: {node}\n")
         neighbors = expandBackward(node)
         for n in neighbors:
             n.score = evaluationFunction(n)
-            print(n)
-        q.put(max(neighbors, key=lambda x: x.score))
-    return False
+            print(f"    {n}")
+        node = (max(neighbors, key=lambda x: x.score))
+    return best
 
 print("=====FORWARD SEARCH=====")
-print(f"Finished Search! Best {forward_search()}")
+print(f"\nFinished Search! Best Feature Set: {forward_search()}")
 print()
 print("=====BACKWARD SEARCH=====")
-print(f"Finished Search! Best {backward_search()}")
+print(f"\nFinished Search! Best Feature Set: {backward_search()}")
