@@ -16,18 +16,6 @@ class Node():
             return f"Feature {self.features} has accuracy {round(self.score, 2)}%"
         else:
             return f"Features {self.features} have accuracy {round(self.score, 2)}%"
-
-    def __lt__(self, other):
-        return self.score < other.score
-    
-    def __eq__(self, other):
-        return self.score < other.score
-    
-    def addFeature(self, feature):
-        self.features.add(feature)
-    
-    def removeFeature(self, feature):
-        self.features.discard(feature)
     
     def cloneAfterAdding(self, feature):
         newFeatures = self.features.copy()
@@ -73,12 +61,38 @@ def forward_search():
         if node.features == allFeatures: 
             print(f"Finished Search! The best {best}")
             return
-        print(f"Best: {node}")
-        print()
+        print(f"Best: {node}\n")
         neighbors = expandForward(node)
         for n in neighbors:
             n.score = evaluationFunction(n)
             print(n)
         q.put(max(neighbors, key=lambda n: n.score))
+    return False
 
+def backward_search():
+    startNode = Node(allFeatures)
+    startNode.score = evaluationFunction(startNode)
+    q = queue.Queue()
+    q.put(startNode)
+    best = startNode
+    print("Beginning Search...")
+    while q.not_empty:
+        node = q.get()
+        if node.score < best.score: print("\nWarning! Accuracy Decreased!")
+        else: best = node
+        if not len(node.features):
+            print(f"Finished Search! The best {best}")
+            return
+        print(f"Best: {node}\n")
+        neighbors = expandBackward(node)
+        for n in neighbors:
+            n.score = evaluationFunction(n)
+            print(n)
+        q.put(max(neighbors, key=lambda x: x.score))
+    return False
+
+print("=====FORWARD SEARCH=====")
 forward_search()
+print()
+print("=====BACKWARD SEARCH=====")
+backward_search()
