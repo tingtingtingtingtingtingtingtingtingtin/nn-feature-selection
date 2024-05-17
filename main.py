@@ -44,15 +44,17 @@ def evaluationFunction(n):
     return round(random.uniform(0, 1), 4)
 
 def expandForward(n):
-    expanded = []
-    for f in allFeatures:
-        if f not in n.features:
-           expanded.append(n.cloneAfterAdding(f))
-    return expanded
+    return [n.cloneAfterAdding(f) for f in allFeatures if f not in n.features]
+    # expanded = []
+    # for f in allFeatures:
+    #     if f not in n.features:
+    #        expanded.append(n.cloneAfterAdding(f))
+    # return expanded
 
 def expandBackward(n):
-    expanded = []
-    for f in allFeatures:
-        if f in n.features:
-            expanded.append(n.cloneAfterRemoving(f))
-    return expanded
+    return [n.cloneAfterRemoving(f) for f in allFeatures if f in n.features]
+    # expanded = []
+    # for f in allFeatures:
+    #     if f in n.features:
+    #         expanded.append(n.cloneAfterRemoving(f))
+    # return expanded
