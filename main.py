@@ -1,5 +1,5 @@
 import copy
-import heapq
+import queue
 import random
 
 allFeatures = {1, 2, 3, 4, 5, 6}
@@ -11,11 +11,11 @@ class Node():
 
     def __str__(self):
         if len(self.features) == 0:
-            return f"Using no features and random evaluation, accuracy is {100*self.score}"
+            return f"Feature {{}} has accuracy {round(self.score, 2)}%"
         elif len(self.features) == 1:
-            return f"Feature {self.features} has accuracy {100*self.score}%"
+            return f"Feature {self.features} has accuracy {round(self.score, 2)}%"
         else:
-            return f"Features {self.features} have accuracy {100*self.score}%"
+            return f"Features {self.features} have accuracy {round(self.score, 2)}%"
 
     def __lt__(self, other):
         return self.score < other.score
@@ -41,7 +41,7 @@ class Node():
 
 def evaluationFunction(n):
     # STUB
-    return round(random.uniform(0, 1), 4)
+    return 100*random.uniform(0, 1)
 
 def expandForward(n):
     return [n.cloneAfterAdding(f) for f in allFeatures if f not in n.features]
@@ -58,3 +58,27 @@ def expandBackward(n):
     #     if f in n.features:
     #         expanded.append(n.cloneAfterRemoving(f))
     # return expanded
+
+def forward_search():
+    startNode = Node()
+    startNode.score = evaluationFunction(startNode)
+    q = queue.Queue()
+    q.put(startNode)
+    best = startNode
+    print("Beginning Search...")
+    while q.not_empty:
+        node = q.get()
+        if node.score < best.score: print("\nWarning! Accuracy Decreased!")
+        else: best = node
+        if node.features == allFeatures: 
+            print(f"Finished Search! The best {best}")
+            return
+        print(f"Best: {node}")
+        print()
+        neighbors = expandForward(node)
+        for n in neighbors:
+            n.score = evaluationFunction(n)
+            print(n)
+        q.put(max(neighbors, key=lambda n: n.score))
+
+forward_search()
