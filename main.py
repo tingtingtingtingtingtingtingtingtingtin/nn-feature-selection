@@ -33,8 +33,13 @@ class Node():
         newFeatures = self.features.copy()
         newFeatures.add(feature)
         return Node(newFeatures, self.score)
-        
+
     def cloneAfterRemoving(self, feature):
         newFeatures = self.features.copy()
         newFeatures.discard(feature)
         return Node(newFeatures, self.score)
+
+def evaluationFunction(n):
+    # STUB
+    return round(random.uniform(0, 1), 4)
+    
