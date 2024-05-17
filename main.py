@@ -23,4 +23,18 @@ class Node():
     def __eq__(self, other):
         return self.score < other.score
     
-
+    def addFeature(self, feature):
+        self.features.add(feature)
+    
+    def removeFeature(self, feature):
+        self.features.discard(feature)
+    
+    def cloneAfterAdding(self, feature):
+        newFeatures = self.features.copy()
+        newFeatures.add(feature)
+        return Node(newFeatures, self.score)
+        
+    def cloneAfterRemoving(self, feature):
+        newFeatures = self.features.copy()
+        newFeatures.discard(feature)
+        return Node(newFeatures, self.score)
