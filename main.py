@@ -42,4 +42,10 @@ class Node():
 def evaluationFunction(n):
     # STUB
     return round(random.uniform(0, 1), 4)
-    
+
+def expandForward(n):
+    expanded = []
+    for f in allFeatures:
+        if f not in n.features:
+           expanded.append(n.cloneAfterAdding(f))
+    return expanded
