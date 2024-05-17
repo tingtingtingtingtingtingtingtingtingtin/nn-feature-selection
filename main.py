@@ -58,9 +58,7 @@ def forward_search():
         node = q.get()
         if node.score < best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
-        if node.features == allFeatures: 
-            print(f"Finished Search! The best {best}")
-            return
+        if node.features == allFeatures: return best
         print(f"Best: {node}\n")
         neighbors = expandForward(node)
         for n in neighbors:
@@ -80,9 +78,7 @@ def backward_search():
         node = q.get()
         if node.score < best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
-        if not len(node.features):
-            print(f"Finished Search! The best {best}")
-            return
+        if not len(node.features): return best
         print(f"Best: {node}\n")
         neighbors = expandBackward(node)
         for n in neighbors:
@@ -92,7 +88,7 @@ def backward_search():
     return False
 
 print("=====FORWARD SEARCH=====")
-forward_search()
+print(f"Finished Search! Best {forward_search()}")
 print()
 print("=====BACKWARD SEARCH=====")
-backward_search()
+print(f"Finished Search! Best {backward_search()}")
