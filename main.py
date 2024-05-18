@@ -80,7 +80,7 @@ def backward_search():
     return best
 
 print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
-print("Featuring:\nAdithya Iyer\nAndy Jarean\nKomay Sugiyama\nTingxuan Wu\n===================")
+print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
 num_feature_input = int(input("\nPlease enter total number of features: "))
 allFeatures = set(range(1, num_feature_input + 1))
 
