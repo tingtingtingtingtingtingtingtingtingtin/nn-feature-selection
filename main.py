@@ -79,8 +79,19 @@ def backward_search():
         node = (max(neighbors, key=lambda x: x.score))
     return best
 
-print("=====FORWARD SEARCH=====")
-print(f"\nFinished Search! Best Feature Set: {forward_search()}")
-print()
-print("=====BACKWARD SEARCH=====")
-print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
+print("Featuring:\nAdithya Iyer\nAndy Jarean\nKomay Sugiyama\nTingxuan Wu\n===================")
+num_feature_input = int(input("\nPlease enter total number of features: "))
+allFeatures = set(range(1, num_feature_input + 1))
+
+print("Features:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
+type_feature_input = int(input("\nType the number of the feature you want to run: "))
+
+if type_feature_input == 1:
+    print("=====FORWARD SEARCH=====")
+    print(f"\nFinished Search! Best Feature Set: {forward_search()}")
+elif type_feature_input == 2:
+    print("=====BACKWARD SEARCH=====")
+    print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+else:
+    print("\nIncorrect input. Terminating...\n")
