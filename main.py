@@ -27,6 +27,16 @@ class Node():
         newFeatures.discard(feature)
         return Node(newFeatures, self.score)
 
+class Classifier():
+    def __init__():
+        pass
+    
+    def train():
+        pass
+
+    def test():
+        pass
+
 def evaluationFunction(n):
     # STUB
     return 100*random.uniform(0, 1)
