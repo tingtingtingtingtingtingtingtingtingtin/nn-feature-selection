@@ -1,6 +1,67 @@
 import copy
 import queue
 import random
+import tkinter 
+from tkinter import scrolledtext
+import customtkinter
+import sys
+
+#-----------------------------
+#UI
+#-----------------------------
+
+def test():
+    print("hi")
+
+customtkinter.set_appearance_mode("System")
+customtkinter.set_default_color_theme("blue")
+
+class ScrollableFrame(customtkinter.CTkScrollableFrame):
+    def __init__(self, master, title):
+        super().__init__(master, label_text=title)
+        self.grid_columnconfigure(0, weight=1)
+        self.text_widget = customtkinter.CTkTextbox(master=self, width=400, corner_radius=0)
+        self.text_widget.grid(row=0, column=0, sticky="nsew")
+
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("NN Feature Selection")
+        self.geometry("500x500")
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        self.scrollable_frame = ScrollableFrame(self, title="this is a scrollable frame")
+        self.scrollable_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
+
+        sys.stdout = TextRedirector(self.scrollable_frame.text_widget)
+
+        self.button = customtkinter.CTkButton(self, text="forward search", command=forward_search)
+        self.button.grid(row=3, column=0, padx=10, pady=10, sticky="ew", columnspan=2)
+        self.button = customtkinter.CTkButton(self, text="backward search", command=backward_search)
+        self.button.grid(row=4, column=0, padx=10, pady=10, sticky="ew", columnspan=2)
+
+class TextRedirector:
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+
+    def write(self, s):
+        self.text_widget.configure(state='normal')  # Make it writable
+        self.text_widget.insert(customtkinter.END, s)
+        self.text_widget.configure(state='disabled')  # Make it read-only again
+        self.text_widget.see(customtkinter.END)  # Scroll to the end
+
+    def flush(self):
+        pass
+
+
+#ABOVE IS THE EXAMPLE FROM THE DOCUMENTATION. NOT MY CODE, I WAS JUST PLAYING AROUND TO SEE WHAT IT LOOKS LIKE
+
+
+
+#-----------------------------
+#Functionality
+#-----------------------------
 
 allFeatures = {1, 2, 3, 4, 5, 6}
 
@@ -84,3 +145,8 @@ print(f"\nFinished Search! Best Feature Set: {forward_search()}")
 print()
 print("=====BACKWARD SEARCH=====")
 print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
