@@ -1,3 +1,4 @@
+import math
 import random
 import pandas as pd
 
@@ -46,6 +47,9 @@ class Classifier:
 
     def test(self, features):
         pass
+    
+    def __calculate_distance(test, reference, features):
+        return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
 
 def evaluationFunction(n):
     # STUB
@@ -116,3 +120,4 @@ c.train(3, small_data)
 print(c.training_data.head())
 print()
 print(c.testing_data)
+print(c.testing_data[2])
