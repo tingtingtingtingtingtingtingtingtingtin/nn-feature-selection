@@ -104,5 +104,7 @@ def backward_search():
 # print(f"\nFinished Search! Best Feature Set: {backward_search()}")
 
 print(small_data.head())
+print(small_data.shape)
 print()
 print(large_data.head())
+print(large_data.shape)
