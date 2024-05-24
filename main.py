@@ -1,6 +1,8 @@
 import copy
 import queue
 import random
+import struct
+
 
 allFeatures = {1, 2, 3, 4, 5, 6}
 
