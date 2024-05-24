@@ -2,6 +2,7 @@ import copy
 import queue
 import random
 import struct
+from load import load_training_data
 
 
 allFeatures = {1, 2, 3, 4, 5, 6}
