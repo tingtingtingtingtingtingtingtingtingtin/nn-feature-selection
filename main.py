@@ -11,7 +11,7 @@ large = 'large-test-dataset.txt'
 small_data = pd.read_csv(small, sep="\\s+", header=None)
 large_data = pd.read_csv(large, sep="\\s+", header=None)
 
-class Node():
+class Node:
     def __init__(self, features = set(), score = 0):
         self.features = features
         self.score = score
@@ -34,15 +34,17 @@ class Node():
         newFeatures.discard(feature)
         return Node(newFeatures, self.score)
 
-class Classifier():
+class Classifier:
     def __init__(self):
-        self.training_data
-        pass
+        self.training_data = None
+        self.testing_data = None
     
     def train(self, id, data):
-        pass
+        if id in data.index:
+            self.training_data = data.drop(id)
+            self.testing_data = data.iloc[id]
 
-    def test(self, id, data, features):
+    def test(self, features):
         pass
 
 def evaluationFunction(n):
@@ -103,8 +105,14 @@ def backward_search():
 # print("=====BACKWARD SEARCH=====")
 # print(f"\nFinished Search! Best Feature Set: {backward_search()}")
 
-print(small_data.head())
-print(small_data.shape)
+# print(small_data.head())
+# print(small_data.shape)
+# print()
+# print(large_data.head())
+# print(large_data.shape)
+
+c = Classifier()
+c.train(3, small_data)
+print(c.training_data.head())
 print()
-print(large_data.head())
-print(large_data.shape)
+print(c.testing_data)
