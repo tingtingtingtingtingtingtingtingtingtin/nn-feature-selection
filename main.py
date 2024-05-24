@@ -1,8 +1,15 @@
-import copy
-import queue
 import random
+import pandas as pd
 
 allFeatures = {1, 2, 3, 4, 5, 6}
+
+# Training data
+small = 'small-test-dataset.txt'
+large = 'large-test-dataset.txt'
+
+# Load training data
+small_data = pd.read_csv(small, sep="\\s+", header=None)
+large_data = pd.read_csv(large, sep="\\s+", header=None)
 
 class Node():
     def __init__(self, features = set(), score = 0):
@@ -28,13 +35,14 @@ class Node():
         return Node(newFeatures, self.score)
 
 class Classifier():
-    def __init__():
+    def __init__(self):
+        self.training_data
         pass
     
-    def train():
+    def train(self, id, data):
         pass
 
-    def test():
+    def test(self, id, data, features):
         pass
 
 def evaluationFunction(n):
@@ -89,8 +97,12 @@ def backward_search():
         node = (max(neighbors, key=lambda x: x.score))
     return best
 
-print("=====FORWARD SEARCH=====")
-print(f"\nFinished Search! Best Feature Set: {forward_search()}")
+# print("=====FORWARD SEARCH=====")
+# print(f"\nFinished Search! Best Feature Set: {forward_search()}")
+# print()
+# print("=====BACKWARD SEARCH=====")
+# print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+
+print(small_data.head())
 print()
-print("=====BACKWARD SEARCH=====")
-print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+print(large_data.head())
