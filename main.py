@@ -4,12 +4,14 @@ import random
 import tkinter 
 from tkinter import scrolledtext
 import customtkinter
+from customtkinter import *
+from PIL import Image
 import sys
 
 #-----------------------------
 #UI
 #-----------------------------
-customtkinter.set_appearance_mode("System")
+customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
 
 class TextFrame(customtkinter.CTkFrame):
@@ -17,38 +19,50 @@ class TextFrame(customtkinter.CTkFrame):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        self.label = customtkinter.CTkLabel(master=self, text=title)
-        self.label.grid(row=0, column=0, sticky="nsew", pady=(10, 0))
-        self.text_widget = customtkinter.CTkTextbox(master=self, width=400, height=600, corner_radius=0)
+        # self.label = customtkinter.CTkLabel(master=self, text=title)
+        # self.label.grid(row=0, column=0, sticky="nsew", pady=(10, 0))
+        self.text_widget = customtkinter.CTkTextbox(master=self, width=400, height=600, corner_radius=0, border_color="#99AAB5", border_width=1)
         self.text_widget.grid(row=1, column=0, sticky="nsew")
 
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.title("NN Feature Selection")
-        self.geometry("500x500")
+        self.geometry("900x700")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.text_frame = TextFrame(self, title="NN Feature Selection")
-        self.text_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
+        self.text_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew", rowspan=3)
 
         sys.stdout = TextRedirector(self.text_frame.text_widget)
 
-        self.button = customtkinter.CTkButton(self, text="forward search", command=forward_search)
-        self.button.grid(row=3, column=0, padx=10, pady=10, sticky="ew", columnspan=2)
-        self.button = customtkinter.CTkButton(self, text="backward search", command=backward_search)
-        self.button.grid(row=4, column=0, padx=10, pady=10, sticky="ew", columnspan=2)
+        self.frame = customtkinter.CTkFrame(self, fg_color="#23272A", border_color="#99AAB5", border_width=1)
+        self.frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+        self.frame.grid_rowconfigure(15, weight=1)
+        self.frame.grid_columnconfigure(0, weight=1)
+        
+        self.image = customtkinter.CTkImage(light_image = Image.open("ninatired.png"), dark_image=Image.open("ninatired.png"),size=(100,100))
+        self.image_label = customtkinter.CTkLabel(self, image=self.image,text="")
+        self.image_label.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.combobox = customtkinter.CTkComboBox(self.frame, values=["1","2","3"])
+        self.combobox.grid(row=13, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.button = customtkinter.CTkButton(self.frame, text="Forward Search", fg_color="#5865F2", command=forward_search, font=("Helvetica", 14))
+        self.button.grid(row=14, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
+        self.button = customtkinter.CTkButton(self.frame, text="Backward Search", fg_color="#5865F2", command=backward_search, font=("Helvetica", 14))
+        self.button.grid(row=15, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
 
 class TextRedirector:
     def __init__(self, text_widget):
         self.text_widget = text_widget
 
     def write(self, s):
-        self.text_widget.configure(state='normal')  # Make it writable
+        self.text_widget.configure(state='normal') 
         self.text_widget.insert(customtkinter.END, s)
-        self.text_widget.configure(state='disabled')  # Make it read-only again
-        self.text_widget.see(customtkinter.END)  # Scroll to the end
+        self.text_widget.configure(state='disabled')  
+        self.text_widget.see(customtkinter.END)  
 
     def flush(self):
         pass
