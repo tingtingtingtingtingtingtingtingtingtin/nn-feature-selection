@@ -55,8 +55,8 @@ class Classifier:
         # Calculate distances for all training data rows against test data
         distances = self.training_data.apply(lambda row: self.__calculate_distance(self.testing_data, row, features), axis=1)
         best_index = distances.idxmin()
-        # Return label of closest neighbor and calculated distance
-        return self.training_data[0][best_index], distances[best_index]
+        # Return predicted label and index of closest neighbor
+        return self.training_data[0][best_index], best_index, distances[best_index]
 
     def __calculate_distance(self, test, reference, features):
         return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
@@ -74,6 +74,8 @@ class Validator:
         for test_instance_id in range(num_instances):
             self.classifier.train(test_instance_id, self.dataset)
             predicted = self.classifier.test(self.feature_set)
+            print(f"Instance {test_instance_id} is class {predicted[0]}")
+            print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
             if predicted[0] == self.classifier.testing_data[0]:
                 num_successes += 1
         return num_successes/num_instances
@@ -150,40 +152,22 @@ feature_set_small = {3, 5, 7}
 feature_set_large = {1, 15, 27}
 c = Classifier()
 
+# normalize(small_data)
+# normalize(large_data)
+
 print("=====SMALL DATA SET=====")
 v1 = Validator(feature_set_small, small_data, c)
 
 s = time.time()
-print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+accuracy = v1.validate()
+print(f"Feature subset {v1.feature_set} has an accuracy of {accuracy}")
 e = time.time()
 print(f"Completed in {e-s} seconds")
 
-
-print("=====LARGE DATA SET=====")
-v2 = Validator(feature_set_large, large_data, c)
-
-s = time.time()
-print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
-e = time.time()
-print(f"Completed in {e-s} seconds")
-
-print()
-
-normalize(small_data)
-normalize(large_data)
-print("=====SMALL DATA SET (NORMALIZED)=====")
-v1 = Validator(feature_set_small, small_data, c)
-
-s = time.time()
-print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
-e = time.time()
-print(f"Completed in {e-s} seconds")
-
-
-print("=====LARGE DATA SET (NORMALIZED)=====")
-v2 = Validator(feature_set_large, large_data, c)
-
-s = time.time()
-print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
-e = time.time()
-print(f"Completed in {e-s} seconds")
+# print("=====LARGE DATA SET=====")
+# v2 = Validator(feature_set_large, large_data, c)
+# s = time.time()
+# accuracy = v2.validate()
+# print(f"Feature subset {v2.feature_set} has an accuracy of {accuracy}")
+# e = time.time()
+# print(f"Completed in {e-s} seconds")
