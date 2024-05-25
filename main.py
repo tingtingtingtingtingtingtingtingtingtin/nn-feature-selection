@@ -1,5 +1,7 @@
 import math
 import random
+import sys
+import time
 import pandas as pd
 
 allFeatures = {1, 2, 3, 4, 5, 6}
@@ -44,11 +46,15 @@ class Classifier:
         if id in data.index:
             self.training_data = data.drop(id)
             self.testing_data = data.iloc[id]
-
-    def test(self, features):
-        pass
     
-    def __calculate_distance(test, reference, features):
+    def test(self, features):
+        # Calculate distances for all training data rows against test data
+        distances = self.training_data.apply(lambda row: self.__calculate_distance(self.testing_data, row, features), axis=1)
+        best_index = distances.idxmin()
+        # Return label of closest neighbor and calculated distance
+        return self.training_data[0][best_index], distances[best_index]
+
+    def __calculate_distance(self, test, reference, features):
         return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
 
 def evaluationFunction(n):
@@ -115,9 +121,10 @@ def backward_search():
 # print(large_data.head())
 # print(large_data.shape)
 
-c = Classifier()
-c.train(3, small_data)
-print(c.training_data.head())
-print()
-print(c.testing_data)
-print(c.testing_data[2])
+feature_set_small = set(range(1, 11))
+feature_set_large = set(range(1, 41))
+for test_instance_id in range(0, small_data.shape[0]):
+    c = Classifier()
+    c.train(test_instance_id, small_data)
+    t = c.test(feature_set_small)
+    print(f"The predicted class label for instance {test_instance_id} using features {feature_set_small} with the 1NN classifier is: {t[0]}. The distance is {round(t[1], 3)}")
