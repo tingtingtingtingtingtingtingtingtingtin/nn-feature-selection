@@ -74,6 +74,8 @@ class Validator:
         for test_instance_id in range(num_instances):
             self.classifier.train(test_instance_id, self.dataset)
             predicted = self.classifier.test(self.feature_set)
+            print(f"Instance {test_instance_id} is class {predicted[0]}")
+            print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
             if predicted[0] == self.classifier.testing_data[0]:
                 num_successes += 1
         return num_successes/num_instances
@@ -151,15 +153,17 @@ print("=====SMALL DATA SET=====")
 v1 = Validator(feature_set_small, small_data, c)
 
 s = time.time()
-print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+accuracy = v1.validate()
+print(f"Feature subset {v1.feature_set} has an accuracy of {accuracy}")
 e = time.time()
 print(f"Completed in {e-s} seconds")
 
 
-print("=====LARGE DATA SET=====")
-v2 = Validator(feature_set_large, large_data, c)
+# print("=====LARGE DATA SET=====")
+# v2 = Validator(feature_set_large, large_data, c)
 
-s = time.time()
-print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
-e = time.time()
-print(f"Completed in {e-s} seconds")
+# s = time.time()
+# accuracy = v2.validate()
+# print(f"Feature subset {v2.feature_set} has an accuracy of {accuracy}")
+# e = time.time()
+# print(f"Completed in {e-s} seconds")
