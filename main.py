@@ -57,6 +57,13 @@ class Classifier:
     def __calculate_distance(self, test, reference, features):
         return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
 
+class Validator:
+    def __init__(self, features, data, classifier):
+        self.features = features
+        self.data = data
+        self.classifier = classifier
+        pass
+
 def evaluationFunction(n):
     # STUB
     return 100*random.uniform(0, 1)
