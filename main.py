@@ -8,7 +8,10 @@ allFeatures = {1, 2, 3, 4, 5, 6}
 
 # Training data
 small = 'small-test-dataset.txt'
+num_features_small = 10
 large = 'large-test-dataset.txt'
+num_features_large = 40
+
 
 # Load training data
 small_data = pd.read_csv(small, sep="\\s+", header=None)
@@ -58,11 +61,21 @@ class Classifier:
         return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
 
 class Validator:
-    def __init__(self, features, data, classifier):
-        self.features = features
-        self.data = data
+    def __init__(self, features, dataset, classifier):
+        self.feature_set = features
+        self.dataset = dataset
         self.classifier = classifier
         pass
+
+    def validate(self):
+        num_instances = self.dataset.shape[0]
+        num_successes = 0
+        for test_instance_id in range(num_instances):
+            self.classifier.train(test_instance_id, self.dataset)
+            predicted = self.classifier.test(self.feature_set)
+            if predicted[0] == self.classifier.testing_data[0]:
+                num_successes += 1
+        return num_successes/num_instances
 
 def evaluationFunction(n):
     # STUB
@@ -128,10 +141,24 @@ def backward_search():
 # print(large_data.head())
 # print(large_data.shape)
 
-feature_set_small = set(range(1, 11))
-feature_set_large = set(range(1, 41))
-for test_instance_id in range(0, small_data.shape[0]):
-    c = Classifier()
-    c.train(test_instance_id, small_data)
-    t = c.test(feature_set_small)
-    print(f"The predicted class label for instance {test_instance_id} using features {feature_set_small} with the 1NN classifier is: {t[0]}. The distance is {round(t[1], 3)}")
+# TESTING
+feature_set_small = {3, 5, 7}
+feature_set_large = {1, 15, 27}
+c = Classifier()
+
+print("=====SMALL DATA SET=====")
+v1 = Validator(feature_set_small, small_data, c)
+
+s = time.time()
+print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+e = time.time()
+print(f"Completed in {e-s} seconds")
+
+
+print("=====LARGE DATA SET=====")
+v2 = Validator(feature_set_large, large_data, c)
+
+s = time.time()
+print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
+e = time.time()
+print(f"Completed in {e-s} seconds")
