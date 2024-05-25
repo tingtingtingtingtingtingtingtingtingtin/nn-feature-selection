@@ -9,19 +9,18 @@ import sys
 #-----------------------------
 #UI
 #-----------------------------
-
-def test():
-    print("hi")
-
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
-class ScrollableFrame(customtkinter.CTkScrollableFrame):
+class TextFrame(customtkinter.CTkFrame):
     def __init__(self, master, title):
-        super().__init__(master, label_text=title)
+        super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
-        self.text_widget = customtkinter.CTkTextbox(master=self, width=400, corner_radius=0)
-        self.text_widget.grid(row=0, column=0, sticky="nsew")
+        self.grid_rowconfigure(0, weight=1)
+        self.label = customtkinter.CTkLabel(master=self, text=title)
+        self.label.grid(row=0, column=0, sticky="nsew", pady=(10, 0))
+        self.text_widget = customtkinter.CTkTextbox(master=self, width=400, height=600, corner_radius=0)
+        self.text_widget.grid(row=1, column=0, sticky="nsew")
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -31,10 +30,10 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.scrollable_frame = ScrollableFrame(self, title="this is a scrollable frame")
-        self.scrollable_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
+        self.text_frame = TextFrame(self, title="NN Feature Selection")
+        self.text_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
-        sys.stdout = TextRedirector(self.scrollable_frame.text_widget)
+        sys.stdout = TextRedirector(self.text_frame.text_widget)
 
         self.button = customtkinter.CTkButton(self, text="forward search", command=forward_search)
         self.button.grid(row=3, column=0, padx=10, pady=10, sticky="ew", columnspan=2)
