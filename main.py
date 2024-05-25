@@ -78,6 +78,9 @@ class Validator:
                 num_successes += 1
         return num_successes/num_instances
 
+def normalize(dataset):
+    return dataset[1:].apply(lambda column: (column - column.mean())/column.std())
+
 def evaluationFunction(n):
     # STUB
     return 100*random.uniform(0, 1)
@@ -157,6 +160,27 @@ print(f"Completed in {e-s} seconds")
 
 
 print("=====LARGE DATA SET=====")
+v2 = Validator(feature_set_large, large_data, c)
+
+s = time.time()
+print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
+e = time.time()
+print(f"Completed in {e-s} seconds")
+
+print()
+
+normalize(small_data)
+normalize(large_data)
+print("=====SMALL DATA SET (NORMALIZED)=====")
+v1 = Validator(feature_set_small, small_data, c)
+
+s = time.time()
+print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+e = time.time()
+print(f"Completed in {e-s} seconds")
+
+
+print("=====LARGE DATA SET (NORMALIZED)=====")
 v2 = Validator(feature_set_large, large_data, c)
 
 s = time.time()
