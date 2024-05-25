@@ -143,8 +143,8 @@ def backward_search():
 # print(large_data.shape)
 
 # TESTING
-feature_set_small = {}
-feature_set_large = {}
+feature_set_small = {3, 5, 7}
+feature_set_large = {1, 15, 27}
 c = Classifier()
 
 print("=====SMALL DATA SET=====")
