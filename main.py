@@ -81,7 +81,7 @@ class Validator:
         return num_successes/num_instances
 
 def normalize(dataset):
-    return dataset[1:].apply(lambda column: (column - column.mean())/column.std())
+    dataset[dataset.columns[1:]] = dataset[dataset.columns[1:]].apply(lambda col: (col - col.mean())/col.std())
 
 def evaluationFunction(n):
     # STUB
@@ -152,8 +152,8 @@ feature_set_small = {3, 5, 7}
 feature_set_large = {1, 15, 27}
 c = Classifier()
 
-# normalize(small_data)
-# normalize(large_data)
+normalize(small_data)
+normalize(large_data)
 
 print("=====SMALL DATA SET=====")
 v1 = Validator(feature_set_small, small_data, c)
