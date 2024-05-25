@@ -55,8 +55,8 @@ class Classifier:
         # Calculate distances for all training data rows against test data
         distances = self.training_data.apply(lambda row: self.__calculate_distance(self.testing_data, row, features), axis=1)
         best_index = distances.idxmin()
-        # Return label of closest neighbor and calculated distance
-        return self.training_data[0][best_index], distances[best_index]
+        # Return predicted label and index of closest neighbor
+        return self.training_data[0][best_index], best_index, distances[best_index]
 
     def __calculate_distance(self, test, reference, features):
         return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
