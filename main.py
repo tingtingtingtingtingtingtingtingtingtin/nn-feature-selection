@@ -103,7 +103,7 @@ def forward_search():
     best = node
     print("Beginning Search...")
     while node.features != allFeatures:
-        if node.score < best.score: print("\nWarning! Accuracy Decreased!")
+        if node.score <= best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
         print(f"\nBest: {node}\n")
         neighbors = expandForward(node)
@@ -111,7 +111,7 @@ def forward_search():
             n.score = evaluationFunction(n)
             print(f"    {n}")
         node = max(neighbors, key=lambda n: n.score)
-    return best
+    return best if node.score <= best.score else node
 
 def backward_search():
     node = Node(allFeatures)
@@ -127,7 +127,7 @@ def backward_search():
             n.score = evaluationFunction(n)
             print(f"    {n}")
         node = (max(neighbors, key=lambda x: x.score))
-    return best
+    return best if node.score < best.score else node
 
 # print("=====FORWARD SEARCH=====")
 # print(f"\nFinished Search! Best Feature Set: {forward_search()}")
