@@ -75,9 +75,9 @@ class Validator:
             # Train and test the classifier on the given instance
             self.classifier.train(test_instance_id, self.dataset)
             predicted = self.classifier.test(self.feature_set)
-            # Print trace
-            print(f"Instance {test_instance_id} is class {predicted[0]}")
-            print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
+            # Print trace, should comment out when running search for readability
+            # print(f"Instance {test_instance_id} is class {predicted[0]}")
+            # print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
             if predicted[0] == self.classifier.testing_data[0]:
                 num_successes += 1
         e = time.time()
