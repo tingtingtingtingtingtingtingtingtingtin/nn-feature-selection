@@ -71,6 +71,7 @@ class Validator:
     def validate(self):
         num_instances = self.dataset.shape[0]
         num_successes = 0
+        s = time.time()
         for test_instance_id in range(num_instances):
             self.classifier.train(test_instance_id, self.dataset)
             predicted = self.classifier.test(self.feature_set)
@@ -78,6 +79,8 @@ class Validator:
             print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
             if predicted[0] == self.classifier.testing_data[0]:
                 num_successes += 1
+        e = time.time()
+        print(f"\nDone! Validated {num_instances} instances in {e-s} seconds.")
         return num_successes/num_instances
 
 def normalize(dataset):
@@ -135,44 +138,48 @@ def backward_search():
         node = (max(neighbors, key=lambda x: x.score))
     return best if node.score < best.score else node
 
-# print("=====FORWARD SEARCH=====")
-# print(f"\nFinished Search! Best Feature Set: {forward_search()}")
-# print()
-# print("=====BACKWARD SEARCH=====")
-# print(f"\nFinished Search! Best Feature Set: {backward_search()}")
+def nn_test():
+    # TESTING
+    feature_set_small = {3, 5, 7}
+    feature_set_large = {1, 15, 27}
+    c = Classifier()
 
-# print(small_data.head())
-# print(small_data.shape)
-# print()
-# print(large_data.head())
-# print(large_data.shape)
+    set_select = input("1. SMALL DATA SET\n2. LARGE DATA SET\n")
+    if set_select == "1":
+        v1 = Validator(feature_set_small, small_data, c)
+        print(f"=====SMALL DATA SET=====\nUsing features {v1.feature_set}")
+        print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+    elif set_select == "2":
+        v2 = Validator(feature_set_large, large_data, c)
+        print(f"=====LARGE DATA SET=====\nUsing features {v2.feature_set}")
+        print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
+    else:
+        print(f"INCORRECT INPUT. ")
+    quit()
 
-# TESTING
-feature_set_small = {3, 5, 7}
-feature_set_large = {1, 15, 27}
-c = Classifier()
+print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
+print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
 
-#print(small_data.head())
-normalize(small_data)
-#print(small_data.head())
+test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
+if test_input == "1":
+    nn_test()
+num_feature_input = int(input("\nPlease enter total number of features: "))
+allFeatures = set(range(1, num_feature_input + 1))
 
-# print(large_data.head())
-# normalize(large_data)
-# print(large_data.head())
+print("Features:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
+type_feature_input = int(input("\nType the number of the features you want to run: "))
 
-print("=====SMALL DATA SET=====")
-v1 = Validator(feature_set_small, small_data, c)
-
-s = time.time()
-accuracy = v1.validate()
-print(f"Feature subset {v1.feature_set} has an accuracy of {accuracy}")
-e = time.time()
-print(f"Completed in {e-s} seconds")
-
-# print("=====LARGE DATA SET=====")
-# v2 = Validator(feature_set_large, large_data, c)
-# s = time.time()
-# accuracy = v2.validate()
-# print(f"Feature subset {v2.feature_set} has an accuracy of {accuracy}")
-# e = time.time()
-# print(f"Completed in {e-s} seconds")
+if type_feature_input == 1:
+    print("=====FORWARD SEARCH=====")
+    s = time.time()
+    f_set = forward_search()
+    e = time.time()
+    print(f"\nFinished search in {e-s} seconds! Best Feature Set: {f_set}")
+elif type_feature_input == 2:
+    print("=====BACKWARD SEARCH=====")
+    s = time.time()
+    f_set = forward_search()
+    e = time.time()
+    print(f"\nFinished search in {e-s} seconds!! Best Feature Set: {f_set}")
+else:
+    print("\nIncorrect input. Terminating...\n")
