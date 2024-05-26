@@ -66,15 +66,16 @@ class Validator:
         self.feature_set = features
         self.dataset = dataset
         self.classifier = classifier
-        pass
 
     def validate(self):
         num_instances = self.dataset.shape[0]
         num_successes = 0
         s = time.time()
         for test_instance_id in range(num_instances):
+            # Train and test the classifier on the given instance
             self.classifier.train(test_instance_id, self.dataset)
             predicted = self.classifier.test(self.feature_set)
+            # Print trace
             print(f"Instance {test_instance_id} is class {predicted[0]}")
             print(f"Its nearest neighbor is {predicted[1]} which is of class {predicted[0]}. The distance is {predicted[2]}")
             if predicted[0] == self.classifier.testing_data[0]:
