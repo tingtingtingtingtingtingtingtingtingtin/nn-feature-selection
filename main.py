@@ -146,12 +146,12 @@ def nn_test():
 
     set_select = input("1. SMALL DATA SET\n2. LARGE DATA SET\n")
     if set_select == "1":
-        print("=====SMALL DATA SET=====\nUsing features {feature_set_small}")
         v1 = Validator(feature_set_small, small_data, c)
+        print(f"=====SMALL DATA SET=====\nUsing features {v1.feature_set}")
         print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
     elif set_select == "2":
-        print("=====LARGE DATA SET=====\nUsing features {feature_set_large}")
         v2 = Validator(feature_set_large, large_data, c)
+        print(f"=====LARGE DATA SET=====\nUsing features {v2.feature_set}")
         print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
     else:
         print(f"INCORRECT INPUT. ")
