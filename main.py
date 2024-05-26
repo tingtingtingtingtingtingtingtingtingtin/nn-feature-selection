@@ -51,7 +51,7 @@ class Classifier:
     
     def test(self, features):
         if not features:
-            return self.training_data[0].value_counts().idxmax(), None
+            return self.training_data[0].value_counts().idxmax(), None, None
         # Calculate distances for all training data rows against test data
         distances = self.training_data.apply(lambda row: self.__calculate_distance(self.testing_data, row, features), axis=1)
         best_index = distances.idxmin()
