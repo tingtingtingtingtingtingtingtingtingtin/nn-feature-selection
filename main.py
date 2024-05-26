@@ -81,7 +81,8 @@ class Validator:
             if predicted[0] == self.classifier.testing_data[0]:
                 num_successes += 1
         e = time.time()
-        print(f"\nDone! Validated {num_instances} instances in {e-s} seconds.")
+        # Also can be commented out for readability
+        #print(f"\nDone! Validated {num_instances} instances in {e-s} seconds.")
         return num_successes/num_instances
 
 def normalize(dataset):
