@@ -152,8 +152,13 @@ feature_set_small = {3, 5, 7}
 feature_set_large = {1, 15, 27}
 c = Classifier()
 
+#print(small_data.head())
 normalize(small_data)
-normalize(large_data)
+#print(small_data.head())
+
+# print(large_data.head())
+# normalize(large_data)
+# print(large_data.head())
 
 print("=====SMALL DATA SET=====")
 v1 = Validator(feature_set_small, small_data, c)
