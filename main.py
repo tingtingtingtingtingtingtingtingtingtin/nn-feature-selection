@@ -80,6 +80,9 @@ class Validator:
                 num_successes += 1
         return num_successes/num_instances
 
+def normalize(dataset):
+    dataset[dataset.columns[1:]] = dataset[dataset.columns[1:]].apply(lambda col: (col - col.mean())/col.std())
+
 def evaluationFunction(n):
     # STUB
     return 100*random.uniform(0, 1)
@@ -149,6 +152,14 @@ feature_set_small = {3, 5, 7}
 feature_set_large = {1, 15, 27}
 c = Classifier()
 
+#print(small_data.head())
+normalize(small_data)
+#print(small_data.head())
+
+# print(large_data.head())
+# normalize(large_data)
+# print(large_data.head())
+
 print("=====SMALL DATA SET=====")
 v1 = Validator(feature_set_small, small_data, c)
 
@@ -158,10 +169,8 @@ print(f"Feature subset {v1.feature_set} has an accuracy of {accuracy}")
 e = time.time()
 print(f"Completed in {e-s} seconds")
 
-
 # print("=====LARGE DATA SET=====")
 # v2 = Validator(feature_set_large, large_data, c)
-
 # s = time.time()
 # accuracy = v2.validate()
 # print(f"Feature subset {v2.feature_set} has an accuracy of {accuracy}")
