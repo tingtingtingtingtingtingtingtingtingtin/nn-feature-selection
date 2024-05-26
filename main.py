@@ -167,7 +167,7 @@ num_feature_input = int(input("\nPlease enter total number of features: "))
 allFeatures = set(range(1, num_feature_input + 1))
 
 print("Features:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
-type_feature_input = int(input("\nType the number of the feature you want to run: "))
+type_feature_input = int(input("\nType the number of the features you want to run: "))
 
 if type_feature_input == 1:
     print("=====FORWARD SEARCH=====")
