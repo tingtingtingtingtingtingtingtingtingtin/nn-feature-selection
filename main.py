@@ -11,7 +11,18 @@ num_features_large = 40
 
 # Load data from user input
 def acquireData():
-    file = input("Enter the file you would like to test: ")
+    print("Which file would you like to use?")
+    print("1. Small Test Dataset")
+    print("2. Large Test Dataset")
+    print("3. Custom")
+    choice = int(input("Enter Selection: "))
+    file = ""
+    if choice == 1:
+        file = "small-test-dataset.txt"
+    if choice == 2:
+        file = "large-test-dataset.txt"
+    if choice == 3:
+        file = input("Enter the file you would like to test: ")
     try:
         data = pd.read_csv(file, sep="\\s+", header=None)
         return data
