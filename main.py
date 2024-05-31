@@ -10,8 +10,14 @@ num_features_large = 40
 
 
 # Load training data
-small_data = pd.read_csv(small, sep="\\s+", header=None)
-large_data = pd.read_csv(large, sep="\\s+", header=None)
+def acquireData():
+    file = input("Enter the file you would like to test: ")
+    try:
+        data = pd.read_csv(file, sep="\\s+", header=None)
+        return data
+    except FileNotFoundError:
+        print("Invalid File Name!")
+        exit(1)
 
 class Node:
     def __init__(self, features = set(), score = 0):
@@ -158,6 +164,7 @@ def nn_test():
 
 print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
 print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
+data = acquireData()
 
 test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
 if test_input == "1":
