@@ -1,9 +1,6 @@
-import math
-import random
 import time
+import numpy as np
 import pandas as pd
-
-allFeatures = {1, 2, 3, 4, 5, 6}
 
 # Training data
 small = 'small-test-dataset.txt'
@@ -53,13 +50,10 @@ class Classifier:
         if not features:
             return self.training_data[0].value_counts().idxmax(), None, None
         # Calculate distances for all training data rows against test data
-        distances = self.training_data.apply(lambda row: self.__calculate_distance(self.testing_data, row, features), axis=1)
-        best_index = distances.idxmin()
+        distances = np.sqrt(np.sum((self.testing_data[list(features)].values - self.training_data.values[:, list(features)])**2, axis = 1))
+        best_index = np.argmin(distances)
         # Return predicted label and index of closest neighbor
-        return self.training_data[0][best_index], best_index, distances[best_index]
-
-    def __calculate_distance(self, test, reference, features):
-        return math.sqrt(sum((test[f]-reference[f])**2 for f in features))
+        return self.training_data.iloc[best_index, 0], best_index, distances[best_index]
 
 class Validator:
     def __init__(self, features, dataset, classifier):
@@ -82,7 +76,7 @@ class Validator:
                 num_successes += 1
         e = time.time()
         # Also can be commented out for readability
-        #print(f"\nDone! Validated {num_instances} instances in {e-s} seconds.")
+        # print(f"\nDone! Validated {num_instances} instances in {e-s} seconds.")
         return num_successes/num_instances
 
 def normalize(dataset):
@@ -111,7 +105,7 @@ def expandBackward(n):
 def forward_search():
     node = Node()
     c = Classifier()
-    validator = Validator(node.features, large_data, c)
+    validator = Validator(node.features, small_data, c)
     node.score = evaluationFunction(node, validator)
     best = node
     print("Beginning Search...")
@@ -161,7 +155,6 @@ def nn_test():
         print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
     else:
         print(f"INCORRECT INPUT. ")
-    quit()
 
 print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
 print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
@@ -169,11 +162,12 @@ print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiya
 test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
 if test_input == "1":
     nn_test()
+    exit(0)
 num_feature_input = int(input("\nPlease enter total number of features: "))
 allFeatures = set(range(1, num_feature_input + 1))
 
-print("Features:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
-type_feature_input = int(input("\nType the number of the features you want to run: "))
+print("Search Algorithms:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
+type_feature_input = int(input("\nType the number of the search you want to run: "))
 
 if type_feature_input == 1:
     print("=====FORWARD SEARCH=====")
