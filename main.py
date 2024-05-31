@@ -9,7 +9,7 @@ large = 'large-test-dataset.txt'
 num_features_large = 40
 
 
-# Load training data
+# Load data from user input
 def acquireData():
     file = input("Enter the file you would like to test: ")
     try:
@@ -93,7 +93,7 @@ def evaluationFunction(n, v):
     return 100*v.validate()
 
 def expandForward(n):
-    return [n.cloneAfterAdding(f) for f in allFeatures if f not in n.features]
+    return [n.cloneAfterAdding(f) for f in features if f not in n.features]
     # expanded = []
     # for f in allFeatures:
     #     if f not in n.features:
@@ -101,7 +101,7 @@ def expandForward(n):
     # return expanded
 
 def expandBackward(n):
-    return [n.cloneAfterRemoving(f) for f in allFeatures if f in n.features]
+    return [n.cloneAfterRemoving(f) for f in features if f in n.features]
     # expanded = []
     # for f in allFeatures:
     #     if f in n.features:
@@ -111,11 +111,11 @@ def expandBackward(n):
 def forward_search():
     node = Node()
     c = Classifier()
-    validator = Validator(node.features, small_data, c)
+    validator = Validator(node.features, data, c)
     node.score = evaluationFunction(node, validator)
     best = node
     print("Beginning Search...")
-    while node.features != allFeatures:
+    while node.features != features:
         if node.score <= best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
         print(f"\nBest: {node}\n")
@@ -127,7 +127,7 @@ def forward_search():
     return best if node.score <= best.score else node
 
 def backward_search():
-    node = Node(allFeatures)
+    node = Node(features)
     node.score = evaluationFunction(node)
     best = node
     print("Beginning Search...")
@@ -142,47 +142,50 @@ def backward_search():
         node = (max(neighbors, key=lambda x: x.score))
     return best if node.score < best.score else node
 
+# Function for testing classifier + validator
 def nn_test():
-    # TESTING
-    feature_set_small = {3, 5, 7}
-    feature_set_large = {1, 15, 27}
-    c = Classifier()
-
-    set_select = input("1. SMALL DATA SET\n2. LARGE DATA SET\n")
+    print("Which of the following feature sets would you like to use?")
+    print(f"1. {{3, 5, 7}}")
+    print(f"2. {{1, 15, 27}}")
+    set_select = input("Enter Selection: ")
+    feature_set = {}
     if set_select == "1":
-        normalize(small_data)
-        v1 = Validator(feature_set_small, small_data, c)
-        print(f"=====SMALL DATA SET=====\nUsing features {v1.feature_set}")
-        print(f"Feature subset {v1.feature_set} has a score of {v1.validate()}")
+        feature_set = {3, 5, 7}
     elif set_select == "2":
-        normalize(large_data)
-        v2 = Validator(feature_set_large, large_data, c)
-        print(f"=====LARGE DATA SET=====\nUsing features {v2.feature_set}")
-        print(f"Feature subset {v2.feature_set} has a score of {v2.validate()}")
-    else:
-        print(f"INCORRECT INPUT. ")
+        feature_set = {1, 15, 27}
+    c = Classifier()
+    v = Validator(feature_set, data, c)
+    print(f"\nValidating NN-Classifier using features {v.feature_set}")
+    print(f"Feature subset {v.feature_set} has an accuracy of {v.validate()}")
 
 print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
 print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
-data = acquireData()
 
-test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
+# Get data from user specified file and extract attributes
+data = acquireData()
+num_instances = data.shape[0]
+num_features = data.shape[1]
+print(f"This dataset has {num_instances} instances and {num_features-1} features (excluding class label).")
+
+print("Normalizing data using Z-Score...")
+normalize(data)
+
+test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR WITH A SPECIFIC FEATURE SET :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
 if test_input == "1":
     nn_test()
     exit(0)
-num_feature_input = int(input("\nPlease enter total number of features: "))
-allFeatures = set(range(1, num_feature_input + 1))
+features = set(range(1, num_features))
 
 print("Search Algorithms:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
-type_feature_input = int(input("\nType the number of the search you want to run: "))
+search_type = int(input("\nType the number of the search you want to run: "))
 
-if type_feature_input == 1:
+if search_type == 1:
     print("=====FORWARD SEARCH=====")
     s = time.time()
     f_set = forward_search()
     e = time.time()
     print(f"\nFinished search in {e-s} seconds! Best Feature Set: {f_set}")
-elif type_feature_input == 2:
+elif search_type == 2:
     print("=====BACKWARD SEARCH=====")
     s = time.time()
     f_set = forward_search()
