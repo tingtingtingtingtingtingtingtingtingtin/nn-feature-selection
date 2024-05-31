@@ -10,7 +10,7 @@ num_features_large = 40
 
 
 # Load data from user input
-def acquireData():
+def acquire_data():
     print("Which file would you like to use?")
     print("1. Small Test Dataset")
     print("2. Large Test Dataset")
@@ -43,12 +43,12 @@ class Node:
         else:
             return f"Features {self.features} have accuracy {round(self.score, 2)}%"
     
-    def cloneAfterAdding(self, feature):
+    def clone_after_adding(self, feature):
         newFeatures = self.features.copy()
         newFeatures.add(feature)
         return Node(newFeatures, self.score)
 
-    def cloneAfterRemoving(self, feature):
+    def clone_after_removing(self, feature):
         newFeatures = self.features.copy()
         newFeatures.discard(feature)
         return Node(newFeatures, self.score)
@@ -99,11 +99,11 @@ class Validator:
 def normalize(dataset):
     dataset[dataset.columns[1:]] = dataset[dataset.columns[1:]].apply(lambda col: (col - col.mean())/col.std())
 
-def evaluationFunction(n, v):
+def evaluation_function(n, v):
     v.feature_set = n.features
     return 100*v.validate()
 
-def expandForward(n):
+def expand_forward(n):
     return [n.cloneAfterAdding(f) for f in features if f not in n.features]
     # expanded = []
     # for f in allFeatures:
@@ -111,7 +111,7 @@ def expandForward(n):
     #        expanded.append(n.cloneAfterAdding(f))
     # return expanded
 
-def expandBackward(n):
+def expand_backward(n):
     return [n.cloneAfterRemoving(f) for f in features if f in n.features]
     # expanded = []
     # for f in allFeatures:
@@ -123,16 +123,16 @@ def forward_search():
     node = Node()
     c = Classifier()
     validator = Validator(node.features, data, c)
-    node.score = evaluationFunction(node, validator)
+    node.score = evaluation_function(node, validator)
     best = node
     print("Beginning Search...")
     while node.features != features:
         if node.score <= best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
         print(f"\nBest: {node}\n")
-        neighbors = expandForward(node)
+        neighbors = expand_forward(node)
         for n in neighbors:
-            n.score = evaluationFunction(n, validator)
+            n.score = evaluation_function(n, validator)
             print(f"    {n}")
         node = max(neighbors, key=lambda n: n.score)
     return best if node.score <= best.score else node
@@ -141,16 +141,16 @@ def backward_search():
     node = Node(features)
     c = Classifier()
     validator = Validator(node.features, data, c)
-    node.score = evaluationFunction(node, validator)
+    node.score = evaluation_function(node, validator)
     best = node
     print("Beginning Search...")
     while len(node.features):
         if node.score < best.score: print("\nWarning! Accuracy Decreased!")
         else: best = node
         print(f"\nBest: {node}\n")
-        neighbors = expandBackward(node)
+        neighbors = expand_backward(node)
         for n in neighbors:
-            n.score = evaluationFunction(n, validator)
+            n.score = evaluation_function(n, validator)
             print(f"    {n}")
         node = (max(neighbors, key=lambda x: x.score))
     return best if node.score < best.score else node
@@ -175,7 +175,7 @@ print("====================Welcome to Komay and friends' Feature Search Selectio
 print("Featuring:\n\n\tAdithya Iyer (aiyer026)\n\tAndy Jarean (ajare002)\n\tKomay Sugiyama (ksugi014)\n\tTingxuan Wu (twu148)\n")
 
 # Get data from user specified file and extract attributes
-data = acquireData()
+data = acquire_data()
 num_instances = data.shape[0]
 num_features = data.shape[1]
 features = set(range(1, num_features))
