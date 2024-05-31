@@ -44,14 +44,14 @@ class Node:
             return f"Features {self.features} have accuracy {round(self.score, 2)}%"
     
     def clone_after_adding(self, feature):
-        newFeatures = self.features.copy()
-        newFeatures.add(feature)
-        return Node(newFeatures, self.score)
+        new_features = self.features.copy()
+        new_features.add(feature)
+        return Node(new_features, self.score)
 
     def clone_after_removing(self, feature):
-        newFeatures = self.features.copy()
-        newFeatures.discard(feature)
-        return Node(newFeatures, self.score)
+        new_features = self.features.copy()
+        new_features.discard(feature)
+        return Node(new_features, self.score)
 
 class Classifier:
     def __init__(self):
