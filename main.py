@@ -88,9 +88,10 @@ class Validator:
 def normalize(dataset):
     dataset[dataset.columns[1:]] = dataset[dataset.columns[1:]].apply(lambda col: (col - col.mean())/col.std())
 
-def evaluationFunction(n):
+def evaluationFunction(n, v):
     # STUB
-    return 100*random.uniform(0, 1)
+    v.feature_set = n.features
+    return 100*v.validate()
 
 def expandForward(n):
     return [n.cloneAfterAdding(f) for f in allFeatures if f not in n.features]
@@ -110,7 +111,9 @@ def expandBackward(n):
 
 def forward_search():
     node = Node()
-    node.score = evaluationFunction(node)
+    c = Classifier()
+    validator = Validator(node.features, large_data, c)
+    node.score = evaluationFunction(node, validator)
     best = node
     print("Beginning Search...")
     while node.features != allFeatures:
@@ -119,7 +122,7 @@ def forward_search():
         print(f"\nBest: {node}\n")
         neighbors = expandForward(node)
         for n in neighbors:
-            n.score = evaluationFunction(n)
+            n.score = evaluationFunction(n, validator)
             print(f"    {n}")
         node = max(neighbors, key=lambda n: n.score)
     return best if node.score <= best.score else node
