@@ -104,7 +104,7 @@ def evaluation_function(n, v):
     return 100*v.validate()
 
 def expand_forward(n):
-    return [n.cloneAfterAdding(f) for f in features if f not in n.features]
+    return [n.clone_after_adding(f) for f in features if f not in n.features]
     # expanded = []
     # for f in allFeatures:
     #     if f not in n.features:
@@ -112,7 +112,7 @@ def expand_forward(n):
     # return expanded
 
 def expand_backward(n):
-    return [n.cloneAfterRemoving(f) for f in features if f in n.features]
+    return [n.clone_after_removing(f) for f in features if f in n.features]
     # expanded = []
     # for f in allFeatures:
     #     if f in n.features:
