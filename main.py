@@ -128,7 +128,9 @@ def forward_search():
 
 def backward_search():
     node = Node(features)
-    node.score = evaluationFunction(node)
+    c = Classifier()
+    validator = Validator(node.features, data, c)
+    node.score = evaluationFunction(node, validator)
     best = node
     print("Beginning Search...")
     while len(node.features):
@@ -137,7 +139,7 @@ def backward_search():
         print(f"\nBest: {node}\n")
         neighbors = expandBackward(node)
         for n in neighbors:
-            n.score = evaluationFunction(n)
+            n.score = evaluationFunction(n, validator)
             print(f"    {n}")
         node = (max(neighbors, key=lambda x: x.score))
     return best if node.score < best.score else node
