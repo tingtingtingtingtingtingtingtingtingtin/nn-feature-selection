@@ -185,10 +185,10 @@ print("Normalizing data using Z-Score...\n")
 normalize(data)
 
 ### CODE FOR TEST HARNESS
-test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR WITH A SPECIFIC FEATURE SET :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
-if test_input == "1":
-    nn_test()
-    exit(0)
+# test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR WITH A SPECIFIC FEATURE SET :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
+# if test_input == "1":
+#     nn_test()
+#     exit(0)
 
 print("Search Algorithms:\n\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm\n")
 search_type = int(input("Enter the number for the search you would like to run: "))
