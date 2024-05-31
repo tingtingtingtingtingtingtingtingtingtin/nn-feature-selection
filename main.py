@@ -89,7 +89,6 @@ def normalize(dataset):
     dataset[dataset.columns[1:]] = dataset[dataset.columns[1:]].apply(lambda col: (col - col.mean())/col.std())
 
 def evaluationFunction(n, v):
-    # STUB
     v.feature_set = n.features
     return 100*v.validate()
 
