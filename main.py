@@ -171,26 +171,27 @@ def nn_test():
     print(f"\nValidating NN-Classifier using features {v.feature_set}")
     print(f"Feature subset {v.feature_set} has an accuracy of {v.validate()}")
 
-print("====================\n Welcome to Komay and friends' Feature Search Selection!\n")
-print("Featuring:\nAdithya Iyer (aiyer026)\nAndy Jarean (ajare002)\nKomay Sugiyama (ksugi014)\nTingxuan Wu (twu148)\n===================")
+print("====================Welcome to Komay and friends' Feature Search Selection!====================")
+print("Featuring:\n\n\tAdithya Iyer (aiyer026)\n\tAndy Jarean (ajare002)\n\tKomay Sugiyama (ksugi014)\n\tTingxuan Wu (twu148)\n")
 
 # Get data from user specified file and extract attributes
 data = acquireData()
 num_instances = data.shape[0]
 num_features = data.shape[1]
-print(f"This dataset has {num_instances} instances and {num_features-1} features (excluding class label).")
+features = set(range(1, num_features))
+print(f"This dataset has {num_instances} instances and {num_features-1} features (excluding class label).\n")
 
-print("Normalizing data using Z-Score...")
+print("Normalizing data using Z-Score...\n")
 normalize(data)
 
+### CODE FOR TEST HARNESS
 test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR WITH A SPECIFIC FEATURE SET :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
 if test_input == "1":
     nn_test()
     exit(0)
-features = set(range(1, num_features))
 
-print("Search Algorithms:\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm")
-search_type = int(input("\nType the number of the search you want to run: "))
+print("Search Algorithms:\n\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm\n")
+search_type = int(input("Enter the number for the search you would like to run: "))
 
 if search_type == 1:
     print("=====FORWARD SEARCH=====")
@@ -201,7 +202,7 @@ if search_type == 1:
 elif search_type == 2:
     print("=====BACKWARD SEARCH=====")
     s = time.time()
-    f_set = forward_search()
+    f_set = backward_search()
     e = time.time()
     print(f"\nFinished search in {e-s} seconds!! Best Feature Set: {f_set}")
 else:
