@@ -1,12 +1,14 @@
 import time
 import numpy as np
 import pandas as pd
+from collections import Counter
 
 # Training data
 small = 'data/CS170_Spring_2024_Large_data__21.txt'
 num_features_small = 10
 large = 'data/CS170_Spring_2024_Small_data__21.txt'
 num_features_large = 40
+k = 1
 
 
 # Load data from user input
@@ -68,9 +70,16 @@ class Classifier:
             return self.training_data[0].value_counts().idxmax(), None, None
         # Calculate distances for all training data rows against test data
         distances = np.sqrt(np.sum((self.testing_data[list(features)].values - self.training_data.values[:, list(features)])**2, axis = 1))
-        best_index = np.argmin(distances)
+                # Find the indices of the k smallest distances
+        k_indices = np.argpartition(distances, k)[:k]
+        
+        # Get the labels of the k nearest neighbors
+        k_labels = self.training_data.iloc[k_indices, 0]
+        
+        # Determine the most common label among the k nearest neighbors
+        most_common_label = Counter(k_labels).most_common(1)[0][0]
         # Return predicted label and index of closest neighbor
-        return self.training_data.iloc[best_index, 0], best_index, distances[best_index]
+        return most_common_label, k_indices, distances[k_indices]
 
 class Validator:
     def __init__(self, features, dataset, classifier):
@@ -190,6 +199,7 @@ normalize(data)
 #     nn_test()
 #     exit(0)
 
+k = int(input("Enter the number of neighbors you want to use: "))
 print("Search Algorithms:\n\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm\n")
 search_type = int(input("Enter the number for the search you would like to run: "))
 
@@ -207,3 +217,4 @@ elif search_type == 2:
     print(f"\nFinished search in {e-s} seconds!! Best Feature Set: {f_set}")
 else:
     print("\nIncorrect input. Terminating...\n")
+
