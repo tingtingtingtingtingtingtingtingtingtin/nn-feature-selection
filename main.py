@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 
 # Training data
-small = 'small-test-dataset.txt'
+small = 'data/CS170_Spring_2024_Large_data__21.txt'
 num_features_small = 10
-large = 'large-test-dataset.txt'
+large = 'data/CS170_Spring_2024_Small_data__21.txt'
 num_features_large = 40
 
 
