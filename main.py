@@ -1,12 +1,16 @@
 import copy
 import queue
 import random
-import tkinter 
+import tkinter
 from tkinter import scrolledtext
 import customtkinter
 from customtkinter import *
 from PIL import Image
 import sys
+import time
+import numpy as np
+import pandas as pd
+from collections import Counter
 
 #-----------------------------
 #UI
@@ -19,8 +23,6 @@ class TextFrame(customtkinter.CTkFrame):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        # self.label = customtkinter.CTkLabel(master=self, text=title)
-        # self.label.grid(row=0, column=0, sticky="nsew", pady=(10, 0))
         self.text_widget = customtkinter.CTkTextbox(master=self, width=400, height=600, corner_radius=0, border_color="#99AAB5", border_width=1)
         self.text_widget.grid(row=1, column=0, sticky="nsew")
 
@@ -42,17 +44,78 @@ class App(customtkinter.CTk):
         self.frame.grid_rowconfigure(15, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
         
-        self.image = customtkinter.CTkImage(light_image = Image.open("ninatired.png"), dark_image=Image.open("ninatired.png"),size=(100,100))
+        self.image = customtkinter.CTkImage(light_image = Image.open("ninatired.png"), dark_image=Image.open("ninatired.png"), size=(100,100))
         self.image_label = customtkinter.CTkLabel(self, image=self.image,text="")
         self.image_label.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-        self.combobox = customtkinter.CTkComboBox(self.frame, values=["1","2","3"])
+        self.combobox = customtkinter.CTkComboBox(self.frame, values=["Small Test Dataset", "Large Test Dataset", "Custom Small", "Custom Large"], command=self.set_dataset)
         self.combobox.grid(row=13, column=1, padx=10, pady=10, sticky="nsew")
 
-        self.button = customtkinter.CTkButton(self.frame, text="Forward Search", fg_color="#5865F2", command=forward_search, font=("Helvetica", 14))
-        self.button.grid(row=14, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
-        self.button = customtkinter.CTkButton(self.frame, text="Backward Search", fg_color="#5865F2", command=backward_search, font=("Helvetica", 14))
-        self.button.grid(row=15, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
+        self.input_k = customtkinter.CTkEntry(self.frame, placeholder_text="Enter k (number of neighbors)")
+        self.input_k.grid(row=14, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.button_forward = customtkinter.CTkButton(self.frame, text="Forward Search", fg_color="#5865F2", command=self.run_forward_search, font=("Helvetica", 14))
+        self.button_forward.grid(row=15, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
+
+        self.button_backward = customtkinter.CTkButton(self.frame, text="Backward Search", fg_color="#5865F2", command=self.run_backward_search, font=("Helvetica", 14))
+        self.button_backward.grid(row=16, column=1, padx=10, pady=10, sticky="nsew", columnspan=1)
+
+        self.dataset_choice = None
+        
+    def set_dataset(self, choice):
+        self.dataset_choice = choice
+            
+    def run_forward_search(self):
+        self.run_search(forward_search)
+
+    def run_backward_search(self):
+        self.run_search(backward_search)
+
+    def run_search(self, search_function):
+        print("====================Welcome to Komay and friends' Feature Search Selection!====================")
+        print("Featuring:\n\n\tAdithya Iyer (aiyer026)\n\tAndy Jarean (ajare002)\n\tKomay Sugiyama (ksugi014)\n\tTingxuan Wu (twu148)\n")
+
+        global data, features, k
+
+        if self.dataset_choice is None:
+            print("Please select a dataset.")
+            return
+
+        file = ""
+        if self.dataset_choice == "Small Test Dataset":
+            file = "data/small-test-dataset.txt"
+        elif self.dataset_choice == "Large Test Dataset":
+            file = "data/large-test-dataset.txt"
+        elif self.dataset_choice == "Custom Small":
+            file = "data/CS170_Spring_2024_Small_data__21.txt"
+        elif self.dataset_choice == "Custom Large":
+            file = "data/CS170_Spring_2024_Large_data__21.txt"
+
+        try:
+            data = pd.read_csv(file, sep="\\s+", header=None)
+        except FileNotFoundError:
+            print("Invalid File Name!")
+            return
+
+        num_instances = data.shape[0]
+        num_features = data.shape[1]
+        features = set(range(1, num_features))
+        print(f"This dataset has {num_instances} instances and {num_features - 1} features (excluding class label).\n")
+
+        print("Normalizing data using Z-Score...\n")
+        normalize(data)
+
+        try:
+            k = int(self.input_k.get())
+        except ValueError:
+            print("Please enter a valid number for k.")
+            return
+
+        print("=====RUNNING SEARCH=====")
+        s = time.time()
+        f_set = search_function()
+        e = time.time()
+        print(f"\nFinished search in {e - s} seconds! Best Feature Set: {f_set}")
 
 class TextRedirector:
     def __init__(self, text_widget):
@@ -67,40 +130,15 @@ class TextRedirector:
     def flush(self):
         pass
 
-
-#ABOVE IS THE EXAMPLE FROM THE DOCUMENTATION. NOT MY CODE, I WAS JUST PLAYING AROUND TO SEE WHAT IT LOOKS LIKE
-
-
-
 #-----------------------------
 #Functionality
 #-----------------------------
 
 # Training data
-# small = 'data/CS170_Spring_2024_Large_data__21.txt'
-# num_features_small = 10
-# large = 'data/CS170_Spring_2024_Small_data__21.txt'
-# num_features_large = 40
 k = 1
 
-
 # Load data from user input
-def acquire_data():
-    print("Which file would you like to use?")
-    print("1. Small Test Dataset")
-    print("2. Large Test Dataset")
-    print("3. Custom Small")
-    print("4. Custom Large")
-    choice = int(input("Enter Selection: "))
-    file = ""
-    if choice == 1:
-        file = "data/small-test-dataset.txt"
-    if choice == 2:
-        file = "data/large-test-dataset.txt"
-    if choice == 3:
-        file = "data/CS170_Spring_2024_Small_data__21.txt"
-    if choice == 4:
-        file = "data/CS170_Spring_2024_Large_data__21.txt"
+def acquire_data(file):
     try:
         data = pd.read_csv(file, sep="\\s+", header=None)
         return data
@@ -230,67 +268,13 @@ def backward_search():
     best = node
     print("Beginning Search...")
     while len(node.features):
-        if node.score < best.score: print("\nWarning! Accuracy Decreased!")
-        else: best = node
-        print(f"\nBest: {node}\n")
-        neighbors = expand_backward(node)
-        for n in neighbors:
-            n.score = evaluation_function(n, validator)
-            print(f"    {n}")
-        node = (max(neighbors, key=lambda x: x.score))
+        if node.score < best.score:
+            print("\nWarning! Accuracy Decreased!")
+        else:
+            best = node
+        node = max(expand_backward(node), key=lambda n: n.score)
     return best if node.score < best.score else node
 
-# Function for testing classifier + validator
-def nn_test():
-    print("Which of the following feature sets would you like to use?")
-    print(f"1. {{3, 5, 7}}")
-    print(f"2. {{1, 15, 27}}")
-    set_select = input("Enter Selection: ")
-    feature_set = {}
-    if set_select == "1":
-        feature_set = {3, 5, 7}
-    elif set_select == "2":
-        feature_set = {1, 15, 27}
-    c = Classifier()
-    v = Validator(feature_set, data, c)
-    print(f"\nValidating NN-Classifier using features {v.feature_set}")
-    print(f"Feature subset {v.feature_set} has an accuracy of {v.validate()}")
-
-print("====================Welcome to Komay and friends' Feature Search Selection!====================")
-print("Featuring:\n\n\tAdithya Iyer (aiyer026)\n\tAndy Jarean (ajare002)\n\tKomay Sugiyama (ksugi014)\n\tTingxuan Wu (twu148)\n")
-
-# Get data from user specified file and extract attributes
-data = acquire_data()
-num_instances = data.shape[0]
-num_features = data.shape[1]
-features = set(range(1, num_features))
-print(f"This dataset has {num_instances} instances and {num_features-1} features (excluding class label).\n")
-
-print("Normalizing data using Z-Score...\n")
-normalize(data)
-
-### CODE FOR TEST HARNESS
-# test_input = input("\n!!!!!!!!!!!!!!!!!!!!\nFOR TESTING PURPOSES, PLEASE INPUT 1 TO TEST NN-CLASSIFIER & VALIDATOR WITH A SPECIFIC FEATURE SET :]\nPRESS ANY OTHER INPUT TO CONTINUE\n!!!!!!!!!!!!!!!!!!!!\n")
-# if test_input == "1":
-#     nn_test()
-#     exit(0)
-
-k = int(input("Enter the number of neighbors you want to use: "))
-print("Search Algorithms:\n\n\t1. Forward Selection\n\t2. Backward Elimination\n\t3. Bertie's Special Algorithm\n")
-search_type = int(input("Enter the number for the search you would like to run: "))
-
-if search_type == 1:
-    print("=====FORWARD SEARCH=====")
-    s = time.time()
-    f_set = forward_search()
-    e = time.time()
-    print(f"\nFinished search in {e-s} seconds! Best Feature Set: {f_set}")
-elif search_type == 2:
-    print("=====BACKWARD SEARCH=====")
-    s = time.time()
-    f_set = backward_search()
-    e = time.time()
-    print(f"\nFinished search in {e-s} seconds!! Best Feature Set: {f_set}")
-else:
-    print("\nIncorrect input. Terminating...\n")
-
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
