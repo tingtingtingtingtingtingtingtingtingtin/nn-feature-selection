@@ -1,6 +1,7 @@
 import time
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from collections import Counter
 
 # Training data
@@ -30,6 +31,10 @@ def acquire_data():
         file = "data/CS170_Spring_2024_Large_data__21.txt"
     try:
         data = pd.read_csv(file, sep="\\s+", header=None)
+        # print("Plotting data")
+        # data.plot(kind="scatter", x=9, y=7, c=data[0])
+        plt.show()
+
         return data
     except FileNotFoundError:
         print("Invalid File Name!")
